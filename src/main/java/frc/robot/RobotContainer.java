@@ -7,8 +7,15 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
+
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -26,8 +33,17 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  private Drive tankDrive;
+  private Command joystickDrive;
+  private XboxController driver;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    driver = new XboxController(0);
+    tankDrive = new Drive();
+    joystickDrive = Commands.run(() -> tankDrive.tankJoystickDrive(driver), tankDrive);
+  
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -42,6 +58,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    tankDrive.setDefaultCommand(joystickDrive)
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
