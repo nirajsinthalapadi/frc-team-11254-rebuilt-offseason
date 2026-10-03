@@ -58,7 +58,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    tankDrive.setDefaultCommand(joystickDrive)
+    tankDrive.setDefaultCommand(joystickDrive);
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
